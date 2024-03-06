@@ -1,0 +1,22 @@
+{
+  "name": "html-and-terminal",
+  "version": "1.0.0",
+  "description": "Html and terminal is a basic project. You can type commnd in browser and run it on your server. You can use it to manage remote systems.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Utsav-Ladani/Html-and-Terminal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Utsav-Ladani/Html-and-Terminal/issues"
+  },
+  "homepage": "https://github.com/Utsav-Ladani/Html-and-Terminal#readme",
+  "dependencies": {
+    "virtualbox": "^1.1.2"
+  }
+}

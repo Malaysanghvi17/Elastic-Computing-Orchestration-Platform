@@ -1,0 +1,20 @@
+{
+  "name": "html-and-terminal",
+  "version": "1.0.0",
+  "description": "use html UI for work with terminal",
+  "main": "src/index.js",
+  "scripts": {},
+  "author": "Utsav",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.0",
+    "node-pty": "^0.10.1",
+    "node-virtualbox": "^0.2.4",
+    "socket.io": "^4.4.1"
+  }
+}
