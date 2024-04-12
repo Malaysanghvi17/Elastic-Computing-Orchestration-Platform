@@ -25,7 +25,8 @@ app.use(cors({
 
 // routes:
 app.use('/api/auth', require('./routes/auth'))
-app.use('/api', require('./routes/vms'))
+// app.use('/api', require('./routes/vms'))
+app.use('/api', require('./routes/container_vm'))
 
 
 app.listen(port, () => {

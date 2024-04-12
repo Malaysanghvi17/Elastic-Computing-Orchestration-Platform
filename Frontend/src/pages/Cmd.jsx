@@ -1,73 +1,64 @@
-import React from 'react'
-import { Terminal } from 'xterm'
-import 'xterm/css/xterm.css'
+import React from "react";
+import { Terminal } from "xterm";
+import "xterm/css/xterm.css";
+import { useHistory } from "react-router-dom";
+import socketio from "socket.io-client";
+import { SOCKET_URL } from "../config";
 
-import socketio from 'socket.io-client'
-import { SOCKET_URL } from "../config"
+const Cmd = () => {
+  const history = useHistory();
 
+  React.useEffect(() => {
+    // init
+    const socket = socketio.connect(SOCKET_URL, { transports: ["websocket"] });
+    const term = new Terminal();
 
-class Cmd extends React.Component {
+    // config
+    term.open(termDOM.current);
+    term.resize(90, 25);
+    socket.emit("resize", 90, 25);
+    term.focus();
 
-    constructor(props) {
-        super(props);
+    // input
+    term.onData((data) => {
+      socket.emit("in", data);
+    });
 
-        // refs
-        this.term_wrapper = React.createRef();
-        this.termDOM = React.createRef();
-    }
+    // output
+    socket.on("out", (data) => {
+      term.write(data);
+    });
 
-    componentDidMount() {
-        // init
-        this.socket = socketio.connect(SOCKET_URL, { transports: ['websocket'] });
-        this.term = new Terminal();
+    // exit
+    socket.on("exit", () => {
+      term.dispose();
+      socket.emit("kill");
+      history.push("/vmslist");
+    });
 
-        // config
-        this.term.open(this.termDOM.current);
-        this.term.resize(90, 25);
-        this.socket.emit('resize', 90, 25);
-        this.term.focus();
+    // focus
+    window.addEventListener("focus", () => {
+      term.focus();
+    });
 
-        // input
-        this.term.onData((data) => {
-            this.socket.emit('in', data);
-        })
+    return () => {
+      // close terminal
+      term.dispose();
+      socket.emit("kill");
+      window.removeEventListener("focus", window);
+    };
+  }, []);
 
-        // output
-        this.socket.on('out', (data) => {
-            this.term.write(data);
-        })
+  const termDOM = React.useRef(null);
 
-        // exit
-        this.socket.on('exit', (data) => {
-            this.term.dispose();
-            this.socket.emit('kill');
-        })
-
-        // focus
-        window.addEventListener('focus', () => {
-            this.term.focus();
-        })
-    }
-
-    componentWillUnmount() {
-        // close terminal
-        this.term.dispose();
-        this.socket.emit('kill');
-
-        window.removeEventListener('focus', window);
-    }
-
-
-    render() {
-        return (
-            <>
-            <h2 style={{  border: '1px solid #ccc', padding: '10px', margin: '10px' }}>perform computations on web</h2>
-            <div ref={this.term_wrapper} className="term-wrapper" >
-                <div ref={this.termDOM} className="terminal" ></div>
-            </div >
-            </>
-        );
-    }
-}
+  return (
+    <>
+      <h2 style={{ border: "1px solid #ccc", padding: "10px", margin: "10px" }}>
+        interact with your vms
+      </h2>
+        <div ref={termDOM} className="terminal"></div>
+    </>
+  );
+};
 
 export default Cmd;

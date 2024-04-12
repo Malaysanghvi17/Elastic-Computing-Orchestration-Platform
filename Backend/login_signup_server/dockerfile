@@ -1,0 +1,14 @@
+# Use the base image based on the selected OS (defaulting to Ubuntu)
+FROM ubuntu:latest
+
+# Install SSH server
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+
+# Expose SSH and HTTP ports
+EXPOSE 22
+EXPOSE 80
+
+# Run script to install SSH and then stop the container
+CMD ["/bin/bash", "-c", "apt-get update && apt-get install -y openssh-server && service ssh start && sleep 10 && service ssh stop && tail -f /dev/null"]

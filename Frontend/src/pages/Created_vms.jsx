@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const VMList = () => {
   const [vms, setVMs] = useState([]);
   let authtoken = localStorage.getItem('token');
-
+  const history = useHistory();
   useEffect(() => {
     const fetchVMs = async () => {
       try {
@@ -35,8 +36,7 @@ const VMList = () => {
           },
         }
       );
-      // Refresh the VM list after starting the VM
-      // You may want to implement this based on your backend response structure
+      history.push('/cmd');
     } catch (error) {
       console.error('Error starting VM:', error.message);
     }
@@ -72,8 +72,7 @@ const VMList = () => {
           },
         }
       );
-      // Refresh the VM list after deleting the VM
-      // You may want to implement this based on your backend response structure
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting VM:', error.message);
     }
@@ -88,7 +87,8 @@ const VMList = () => {
           <p>Guest os type: {vm.GuestOs}</p>
           <p>CPU: {vm.cpus}</p>
           <p>RAM: {vm.memory}</p>
-          <p>Bridge Adapter: {vm.bridgeadapter1}</p>
+          <p>Storage: {vm.storage}</p>
+          <p>ssh port: {vm.sshport}</p>
           <p>MAC Address: {vm.macaddress1}</p>
           {/* Add more details as needed */}
           <button onClick={() => startVM(vm.name)} style={{ border: '3px solid black', padding: '2px', margin: '5px', marginLeft: '0px' }}>Start</button>

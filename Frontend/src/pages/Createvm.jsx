@@ -11,9 +11,10 @@ function Createvm() {
   const [hardDriveSpace, setHardDriveSpace] = useState(10);
   const [networkAdapter, setNetworkAdapter] = useState('bridged');
   const [processorCores, setProcessorCores] = useState(1);
+  const [passwd, setPasswd] = useState('');
   const [isVMStarted, setIsVMStarted] = useState(false);
-  const history = useHistory();
-  var userid = 1;
+  // const history = useHistory();
+  // var userid = 1;
 
   const handleSubmit = async () => {
     const vmData = {
@@ -23,6 +24,7 @@ function Createvm() {
       ram,
       hardDriveSpace,
       cpus: processorCores,
+      password: passwd,
       networkAdapter,
     };
     let authtoken = localStorage.getItem('token');
@@ -146,7 +148,17 @@ function Createvm() {
           </label>
           <br />
           <br />
-          
+          <label style={{ marginBottom: '5px', color: 'black', fontSize: '18px' }}>
+            Password of your VM:
+            <input
+              type="text"
+              value={passwd}
+              onChange={(e) => setPasswd(e.target.value)}
+              style={{ borderRadius: '5px', margin: '5px', padding: '2px', fontSize: '16px' }}
+            />
+          </label>
+          <br/>
+          <br/>
           <button type="button" onClick={handleSubmit} style={{ fontSize: '18px' }}>
             Create VM
           </button>
