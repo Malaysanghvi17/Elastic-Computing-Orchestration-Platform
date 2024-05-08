@@ -22,9 +22,10 @@ npm install
    - node index.js
 
 
-project photos:
-![image](https://github.com/Malaysanghvi17/Cloud-based-VM-Infrastructure-provider-platform/assets/127402092/f087d49c-4572-4d6d-ad35-ce2f7457be82)
-![image](https://github.com/Malaysanghvi17/Cloud-based-VM-Infrastructure-provider-platform/assets/127402092/b538becd-be2b-404d-b103-98105f5ffbd1)
+project images:
+![p1](https://github.com/Malaysanghvi17/VM-orchestration-platform/assets/127402092/3de509ba-e812-4bdd-9707-23388718db01)
+![p2](https://github.com/Malaysanghvi17/VM-orchestration-platform/assets/127402092/dd103d19-100f-401f-a98b-9c25f0570492)
+![p3](https://github.com/Malaysanghvi17/VM-orchestration-platform/assets/127402092/ecb889c2-b91f-4782-8442-8f0ec5bd5eed)
 ![image](https://github.com/Malaysanghvi17/Cloud-based-VM-Infrastructure-provider-platform/assets/127402092/1f90baef-ad25-442c-a89d-5e642eafb9d2)
 ![image](https://github.com/Malaysanghvi17/Cloud-based-VM-Infrastructure-provider-platform/assets/127402092/8209e15d-6d5a-43bc-b1aa-7775f997b72d)
 
