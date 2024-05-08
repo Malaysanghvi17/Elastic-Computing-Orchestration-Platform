@@ -1,11 +1,11 @@
 Description:
-Developed a personal cloud computing platform for users to create, manage, and interact with virtual machines (VMs) via a user-friendly web interface.
+Developed a personal cloud computing platform for users to create, manage, and interact with Docker containers via a user-friendly web interface.
 Utilized React.js, Node.js, Node-pty, and Express.js for efficient development.
-Implemented authentication token system for secure user access.
-Users can customize VM specifications (CPU cores, RAM, storage, OS type) and view their VM inventory.
-Established SSH connections to running VMs, enabling a seamless command-line interface for user interaction.
+Implemented an authentication token system for secure user access.
+Users can customize container specifications (CPU cores, RAM, storage, OS type) and view their container inventory.
+Established SSH connections to running containers, enabling a seamless command-line interface for user interaction.
 Provides both Infrastructure as a Service (IaaS) and Platform as a Service (PaaS) solutions.
-Demonstrates proficiency in web development, virtualization, and security technologies.
+Demonstrates proficiency in web development, containerization, and security technologies.
 
 To run the project:
 
