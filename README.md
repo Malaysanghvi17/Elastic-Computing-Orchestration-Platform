@@ -65,9 +65,8 @@ To run this project locally, follow these steps:
 ## Usage
 
 1. Open the application in your browser at `http://localhost:4200/`.
-2. Create an account or log in to access the dashboard.
-3. Use the dashboard to create, manage, and interact with virtual instances.
-4. Access SSH terminals for your containers via the web interface.
+2. Use the dashboard to create, manage, and interact with virtual instances.
+3. Access terminals for your containers via the web interface.
 
 # Working Photos of the Project:
 1. Dashboard, for creating pods:
