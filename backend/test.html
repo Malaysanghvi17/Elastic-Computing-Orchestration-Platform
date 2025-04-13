@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="command-input"></div>
+    <div id="terminal-output"></div>
+    <script>
+      // client.js - Example WebSocket client for pod shell access
+      // This can be used in a web application with proper UI components
+
+      // Connect to the WebSocket server
+      const socket = new WebSocket("ws://localhost:3000");
+
+      // Handle connection open
+      socket.onopen = () => {
+        console.log("Connected to WebSocket server");
+
+        // Initialize connection to a pod
+        const initData = {
+          type: "init",
+          namespace: "default",
+          podName: "test1",
+          userId: "user123",
+        };
+
+        socket.send(JSON.stringify(initData));
+      };
+
+      // Handle incoming messages
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+        
+        switch (data.type) {
+          case "connected":
+            console.log(data.message);
+            // After connection is established, you can send commands
+            break;
+          case "stdout":
+            console.log("STDOUT:", data.data);
+            // Display in terminal UI
+            document.getElementById("terminal-output").textContent += data.data;
+            break;
+          case "stderr":
+            console.error("STDERR:", data.data);
+            // Display in terminal UI with error styling
+            const errorElement = document.createElement("span");
+            errorElement.className = "error-text";
+            errorElement.textContent = data.data;
+            document
+              .getElementById("terminal-output")
+              .appendChild(errorElement);
+            break;
+          case "error":
+            console.error("ERROR:", data.message);
+            // Show error message to user
+            alert(`Error: ${data.message}`);
+            break;
+          case "close":
+            console.log(`Connection closed with code ${data.code}`);
+            // Handle terminal session close
+            break;
+        }
+      };
+
+      // Handle connection close
+      socket.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+
+      // Handle connection error
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      // Function to send commands to the pod
+      function sendCommand(command) {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(
+            JSON.stringify({
+              type: "command",
+              command: command,
+            })
+          );
+        } else {
+          console.error("WebSocket is not connected");
+        }
+      }
+
+      // Example: Add event listener to a command input field
+      document
+        .getElementById("command-input")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            const command = event.target.value;
+            sendCommand(command);
+            event.target.value = ""; // Clear input field
+          }
+        });
+
+      // Example: Close connection when leaving the page
+      window.addEventListener("beforeunload", () => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.close();
+        }
+      });
+    </script>
+  </body>
+</html>
