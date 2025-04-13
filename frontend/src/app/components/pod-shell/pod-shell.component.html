@@ -1,0 +1,70 @@
+<!-- pod-shell.component.html -->
+<div class="pod-shell-container">
+    <div class="connection-panel" *ngIf="!connected">
+      <h2>Connect to Pod Shell</h2>
+      
+      <form [formGroup]="connectionForm" (ngSubmit)="connect()">
+        <div class="form-group">
+          <label for="namespace">Namespace:</label>
+          <input type="text" id="namespace" formControlName="namespace" placeholder="Enter namespace">
+          <div class="error-message" *ngIf="connectionForm.get('namespace')?.invalid && connectionForm.get('namespace')?.touched">
+            Namespace is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="podName">Pod Name:</label>
+          <input type="text" id="podName" formControlName="podName" placeholder="Enter pod name">
+          <div class="error-message" *ngIf="connectionForm.get('podName')?.invalid && connectionForm.get('podName')?.touched">
+            Pod name is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="container">Container (optional):</label>
+          <input type="text" id="container" formControlName="container" placeholder="Enter container name">
+        </div>
+        
+        <div class="form-group">
+          <label for="userId">User ID:</label>
+          <input type="text" id="userId" formControlName="userId" placeholder="Enter your user ID">
+          <div class="error-message" *ngIf="connectionForm.get('userId')?.invalid && connectionForm.get('userId')?.touched">
+            User ID is required
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button type="submit" [disabled]="connectionForm.invalid || loading">
+            <span *ngIf="!loading">Connect</span>
+            <span *ngIf="loading">Connecting...</span>
+          </button>
+        </div>
+        
+        <div class="error-box" *ngIf="error">
+          {{ error }}
+        </div>
+      </form>
+    </div>
+    
+    <div class="terminal-container" [class.active]="connected">
+      <div class="terminal-header">
+        <div class="pod-info" *ngIf="connected">
+          <span>{{ connectionForm.get('namespace')?.value }}/{{ connectionForm.get('podName')?.value }}</span>
+          <span *ngIf="connectionForm.get('container')?.value">:{{ connectionForm.get('container')?.value }}</span>
+        </div>
+        <div class="terminal-controls">
+          <button (click)="clearTerminal()" title="Clear Terminal">Clear</button>
+          <button (click)="disconnect()" *ngIf="connected" title="Disconnect">Disconnect</button>
+        </div>
+      </div>
+      
+      <div class="terminal-screen">
+        <pre #terminal class="terminal-output">{{ terminalOutput }}</pre>
+        
+        <form *ngIf="connected" (submit)="sendCommand($event)" class="command-form">
+          <span class="prompt">$</span>
+          <input #commandInput type="text" class="command-input" placeholder="Enter command..." autocomplete="off">
+        </form>
+      </div>
+    </div>
+  </div>

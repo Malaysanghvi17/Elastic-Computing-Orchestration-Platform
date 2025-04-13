@@ -1,0 +1,210 @@
+<div class="container mt-4">
+  <h1>Kubernetes Dashboard</h1>
+  
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-secondary" (click)="refreshData()">
+      <i class="bi bi-arrow-clockwise"></i> Refresh Data
+    </button>
+  </div>
+
+  <!-- Pod Management -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2>Pod Management</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="podForm" (ngSubmit)="createPod()" class="mb-4">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="namespace">Namespace</label>
+              <input type="text" id="namespace" class="form-control" formControlName="namespace">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="podName">Pod Name</label>
+              <input type="text" id="podName" class="form-control" formControlName="podName">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="imageName">Image Name</label>
+              <input type="text" id="imageName" class="form-control" formControlName="imageName">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="cpuLimit">CPU Limit</label>
+              <input type="text" id="cpuLimit" class="form-control" formControlName="cpuLimit">
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="memoryLimit">Memory Limit</label>
+              <input type="text" id="memoryLimit" class="form-control" formControlName="memoryLimit">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Port</label>
+              <input type="number" class="form-control" formControlName="port" placeholder="Enter port number">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="protocolSelect">Protocol</label>
+              <select id="protocolSelect" class="form-control" formControlName="protocol">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary mt-4" [disabled]="!podForm.valid">Create Pod</button>
+          </div>
+        </div>
+      </form>
+
+      <h3>Existing Pods</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Image</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pod of pods">
+            <td>
+              <div class="form-check">
+                <label for="pod">select pods:</label>
+                <input class="form-check-input" type="checkbox" id="pod"
+                       [id]="'pod-' + pod.name"
+                       [checked]="isPodSelected(pod.name)"
+                       (change)="togglePodSelection(pod.name)">
+              </div>
+            </td>
+            <td>{{ pod.name }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-success': pod.status === 'Running',
+                'bg-warning': pod.status === 'Pending',
+                'bg-danger': pod.status === 'Failed' || pod.status === 'Unknown',
+                'bg-info': pod.status === 'Succeeded'
+              }">{{ pod.status }}</span>
+            </td>
+            <td>{{ pod.image }}</td>
+            <td>{{ pod.createdAt | date }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="deletePod(pod.name)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="pods.length === 0">
+            <td colspan="6" class="text-center">No pods found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Load Balancer Management -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2>Load Balancer Management</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="lbForm" (ngSubmit)="createLoadBalancer()" class="mb-4">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lbNamespace">Namespace</label>
+              <input id="lbNamespace" type="text" class="form-control" formControlName="namespace">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lbName">Name</label>
+              <input type="text" id="lbName" class="form-control" formControlName="name">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lbPort">Port</label>
+              <input type="number" id="lbPort" class="form-control" formControlName="port">
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lbProtocol">Protocol</label>
+              <select class="form-control" id="lbProtocol" formControlName="protocol">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="alert alert-info">
+              <strong>Selected Pods:</strong> 
+              <span *ngIf="selectedPods.length === 0">No pods selected</span>
+              <span *ngIf="selectedPods.length > 0">
+                {{ selectedPods.join(', ') }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary" [disabled]="!lbForm.valid || selectedPods.length === 0">
+              Create Load Balancer
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <h3>Existing Load Balancers</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>External IP</th>
+            <th>Ports</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lb of loadBalancers">
+            <td>{{ lb.name }}</td>
+            <td>{{ lb.externalIP }}</td>
+            <td>
+              <span *ngFor="let port of lb.ports">
+                {{ port.port }}:{{ port.targetPort }}/{{ port.protocol }}
+              </span>
+            </td>
+            <td>{{ lb.createdAt | date }}</td>
+            <td>
+              <button class="btn btn-info btn-sm me-2" (click)="getServiceUrl(lb.name)">Get URL</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteLoadBalancer(lb.name)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="loadBalancers.length === 0">
+            <td colspan="5" class="text-center">No load balancers found</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="serviceUrl" class="alert alert-success mt-3">
+        <strong>Service URL:</strong> {{ serviceUrl }}
+      </div>
+    </div>
+  </div>
+</div>

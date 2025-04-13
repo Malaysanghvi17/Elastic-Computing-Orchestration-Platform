@@ -1,0 +1,36 @@
+.pod-selection {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+
+  .form-check {
+    margin-bottom: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+  }
+}
+
+.alert {
+  margin-top: 20px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+} 
